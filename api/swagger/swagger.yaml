@@ -1,0 +1,107 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Hello World App
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+  - application/octet-stream
+# format of the responses to the client (Accepts)
+produces:
+  - text/plain
+  - application/octet-stream
+paths:
+  /{bucket}/{key}:
+    # our controller name
+    x-swagger-router-controller: s3
+    get:
+      description: get the specified file in the specified bucket
+      operationId: getObject
+      # define the type of response for Success "200" and Error
+      parameters:
+        - name: bucket
+          in: path
+          description: The bucket
+          required: true
+          type: string
+        - name: key
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: file
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /{bucket}:
+    # our controller name
+    x-swagger-router-controller: multer
+    put:
+      consumes:
+        - multipart/form-data
+      # format of the responses to the client (Accepts)
+      produces:
+        - application/json
+      description: put the specified file in the specified bucket
+      operationId: putObject
+      # define the type of response for Success "200" and Error
+      parameters:
+        # - name: binaryData
+        #   in: body
+        #   required: true
+        #   schema:
+        #     type: string
+        #     format: file
+        - name: file
+          in: formData
+          required: true
+          type: file
+        - name: bucket
+          in: path
+          description: The destination bucket
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  GeneralResponse:
+      type: object
+      properties:
+        success:
+          type: number
+          description: returns 1 if successful
+        description:
+          type: string
+          description: a short comment 
+      required:
+        - success
+        - description
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
