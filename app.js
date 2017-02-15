@@ -9,13 +9,16 @@ var config = {
 };
 
 /******/
-var upload  = require('multer')({ dest: 'uploads/' });
+// var upload  = require('multer')({ dest: 'uploads/' });
+
+var s3helper = require('./api/helpers/s3helper');
 /******/
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }
 
-  app.use(upload.fields([{name: "file"}]));
+  // app.use(upload.fields([{name: "file"}]));
+  app.use(s3helper.putObject.fields([{name: "file"}]));
 
   // install middleware
   swaggerExpress.register(app);

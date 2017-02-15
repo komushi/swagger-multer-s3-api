@@ -48,7 +48,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /{bucket}:
     # our controller name
-    x-swagger-router-controller: multer
+    x-swagger-router-controller: s3
     put:
       consumes:
         - multipart/form-data
@@ -83,6 +83,43 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  # /{bucket}:
+  #   # our controller name
+  #   x-swagger-router-controller: multer
+  #   put:
+  #     consumes:
+  #       - multipart/form-data
+  #     # format of the responses to the client (Accepts)
+  #     produces:
+  #       - application/json
+  #     description: put the specified file in the specified bucket
+  #     operationId: putObject
+  #     # define the type of response for Success "200" and Error
+  #     parameters:
+  #       # - name: binaryData
+  #       #   in: body
+  #       #   required: true
+  #       #   schema:
+  #       #     type: string
+  #       #     format: file
+  #       - name: file
+  #         in: formData
+  #         required: true
+  #         type: file
+  #       - name: bucket
+  #         in: path
+  #         description: The destination bucket
+  #         required: true
+  #         type: string
+  #     responses:
+  #       "200":
+  #         description: Success
+  #         schema:
+  #           $ref: "#/definitions/GeneralResponse"
+  #       default:
+  #         description: Error
+  #         schema:
+  #           $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions

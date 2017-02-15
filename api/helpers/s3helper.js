@@ -15,7 +15,7 @@ exports.putObject =
         bucket: function (req, file, cb) {
           console.log("swagger");
           console.log(req.files);
-          cb(null, req.swagger.params.bucket.value);
+          cb(null, 'training-sally');
         },
         metadata: function (req, file, cb) {
           console.log("file");
@@ -27,6 +27,29 @@ exports.putObject =
         }
     })
   });
+
+exports.generateMulter = function (req){
+  var bucket = req.swagger.params.bucket.value;
+  return multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: function (req, file, cb) {
+          console.log("swagger");
+          console.log(req.files);
+          cb(null, bucket);
+        },
+        metadata: function (req, file, cb) {
+          console.log("file");
+          console.log(file);
+          cb(null, { fieldName: file.fieldname });
+        },
+        key: function (req, file, cb) {
+          cb(null, Date.now().toString() + '_' + file.originalname);
+        }
+    })
+  });
+}
+
 
 //cloud image uploader using multer-s3 
 //Pass the bucket name to the bucketName param to upload the file to the bucket 
